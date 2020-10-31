@@ -72,3 +72,20 @@ $headerParams = @{
 
 Write-Verbose "Finished with part 1"
 #endregion
+
+#Creating dynamic group for Intune users
+Write-Verbose "Composing body"
+$dynamicGroupProperties = @{
+    "description" = "All users with active Intune license";
+    "displayName" = "IntuneEnabled Users";
+    "groupTypes" = @("DynamicMembership");
+    "mailEnabled" = $False;
+    "mailNickname" = "IntuneEnabledUsers";
+    "membershipRule" = "user.assignedPlans -any (assignedPlan.service -eq `"SCO`" -and assignedPlan.capabilityStatus -eq `"Enabled`")";
+    "membershipRuleProcessingState" = "On";
+    "securityEnabled" = $True
+}
+
+
+
+Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/beta/groups" -Body (ConvertTo-Json $dynamicGroupProperties) -method POST
