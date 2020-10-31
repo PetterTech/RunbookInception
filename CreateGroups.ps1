@@ -75,10 +75,10 @@ Write-Verbose "Finished with part 1"
 #endregion
 
 #Creating dynamic group for Intune users
-Write-Verbose "Composing body"
+Write-Verbose "Composing body for intuneEnabledUsers"
 $dynamicGroupProperties = @{
     "description" = "All users with active Intune license";
-    "displayName" = "IntuneEnabled Users";
+    "displayName" = "IntuneEnabledUsers";
     "groupTypes" = @("DynamicMembership");
     "mailEnabled" = $False;
     "mailNickname" = "IntuneEnabledUsers";
@@ -86,7 +86,136 @@ $dynamicGroupProperties = @{
     "membershipRuleProcessingState" = "On";
     "securityEnabled" = $True
 }
+Write-Verbose "Body composed"
 
+try {
+    Write-Verbose "Creating Dynamic group"
+    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $dynamicGroupProperties) -method POST -UseBasicParsing
+    Write-Verbose "Group created"
+}
 
+catch {
+    Write-Verbose "Failed to create group"
+    Write-Output $Error[0]
+    throw "Failed to create group"
+}
 
-Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/beta/groups" -Body (ConvertTo-Json $dynamicGroupProperties) -method POST
+#Creating security group for Profile1
+Write-Verbose "Composing body for profile1"
+$profile1GroupProperties = @{
+    "description" = "Users that should use Profile1";
+    "displayName" = "Profile1";
+    "groupTypes" = @("Unified");
+    "mailEnabled" = $False;
+    "mailNickname" = "Profile1";
+    "securityEnabled" = $True
+}
+Write-Verbose "Body composed"
+
+try {
+    Write-Verbose "Creating security group"
+    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $profile1GroupProperties) -method POST -UseBasicParsing
+    Write-Verbose "Group created"
+}
+
+catch {
+    Write-Verbose "Failed to create group"
+    Write-Output $Error[0]
+    throw "Failed to create group"
+}
+
+#Creating security group for ConditionalAccess
+Write-Verbose "Composing body for ConditionalAccess"
+$ConditionalAccessGroupProperties = @{
+    "description" = "Users that should use ConditionalAccess";
+    "displayName" = "ConditionalAccess";
+    "groupTypes" = @("Unified");
+    "mailEnabled" = $False;
+    "mailNickname" = "ConditionalAccess";
+    "securityEnabled" = $True
+}
+Write-Verbose "Body composed"
+
+try {
+    Write-Verbose "Creating security group"
+    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $ConditionalAccessGroupProperties) -method POST -UseBasicParsing
+    Write-Verbose "Group created"
+}
+
+catch {
+    Write-Verbose "Failed to create group"
+    Write-Output $Error[0]
+    throw "Failed to create group"
+}
+
+#Creating security group for ConfigurationPolicies
+Write-Verbose "Composing body for ConfigurationPolicies"
+$ConfigurationPoliciesGroupProperties = @{
+    "description" = "Users that should use ConfigurationPolicies";
+    "displayName" = "ConfigurationPolicies";
+    "groupTypes" = @("Unified");
+    "mailEnabled" = $False;
+    "mailNickname" = "ConfigurationPolicies";
+    "securityEnabled" = $True
+}
+Write-Verbose "Body composed"
+
+try {
+    Write-Verbose "Creating security group"
+    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $ConfigurationPoliciesGroupProperties) -method POST -UseBasicParsing
+    Write-Verbose "Group created"
+}
+
+catch {
+    Write-Verbose "Failed to create group"
+    Write-Output $Error[0]
+    throw "Failed to create group"
+}
+
+#Creating security group for IdentityProtection
+Write-Verbose "Composing body for IdentityProtection"
+$IdentityProtectionGroupProperties = @{
+    "description" = "Users that should use IdentityProtection";
+    "displayName" = "IdentityProtection";
+    "groupTypes" = @("Unified");
+    "mailEnabled" = $False;
+    "mailNickname" = "IdentityProtection";
+    "securityEnabled" = $True
+}
+Write-Verbose "Body composed"
+
+try {
+    Write-Verbose "Creating security group"
+    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $IdentityProtectionGroupProperties) -method POST -UseBasicParsing
+    Write-Verbose "Group created"
+}
+
+catch {
+    Write-Verbose "Failed to create group"
+    Write-Output $Error[0]
+    throw "Failed to create group"
+}
+
+#Creating security group for MCAS
+Write-Verbose "Composing body for MCAS"
+$MCASGroupProperties = @{
+    "description" = "Users that should use MCAS";
+    "displayName" = "MCAS";
+    "groupTypes" = @("Unified");
+    "mailEnabled" = $False;
+    "mailNickname" = "MCAS";
+    "securityEnabled" = $True
+}
+Write-Verbose "Body composed"
+
+try {
+    Write-Verbose "Creating security group"
+    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $MCASGroupProperties) -method POST -UseBasicParsing
+    Write-Verbose "Group created"
+}
+
+catch {
+    Write-Verbose "Failed to create group"
+    Write-Output $Error[0]
+    throw "Failed to create group"
+}
