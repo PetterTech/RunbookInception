@@ -56,7 +56,7 @@ catch {
 #Creating group
 try {
     Write-Verbose "Creating group"
-    $Group = New-AzureADGroup -DisplayName "My new group"
+    $Group = New-AzureADGroup -DisplayName "My new group" -MailEnabled $false -SecurityEnabled $true -MailNickName "MyNewGroup"
     Write-Verbose "Group created"
 }
 
