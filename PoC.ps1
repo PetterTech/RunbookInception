@@ -37,6 +37,7 @@ catch {
 }
 
 #Creating test user
+<#
 try {
     Write-Verbose "Creating user"
     $PasswordProfile = New-Object -TypeName Microsoft.Open.AzureAD.Model.PasswordProfile
@@ -50,6 +51,7 @@ catch {
     Write-Output $error[0]
     throw "I have failed you"
 }
+#>
 
 #Creating group
 try {
