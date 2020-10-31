@@ -113,7 +113,7 @@ Write-Verbose "Composing body for profile1"
 $profile1GroupProperties = @{
     "description" = "Users that should use Profile1";
     "displayName" = "Profile1";
-    "groupTypes" = @("");
+    "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "Profile1";
     "securityEnabled" = $True
@@ -138,7 +138,7 @@ Write-Verbose "Composing body for ConditionalAccess"
 $ConditionalAccessGroupProperties = @{
     "description" = "Users that should use ConditionalAccess";
     "displayName" = "ConditionalAccess";
-    "groupTypes" = @("");
+    "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "ConditionalAccess";
     "securityEnabled" = $True
@@ -163,7 +163,7 @@ Write-Verbose "Composing body for ConfigurationPolicies"
 $ConfigurationPoliciesGroupProperties = @{
     "description" = "Users that should use ConfigurationPolicies";
     "displayName" = "ConfigurationPolicies";
-    "groupTypes" = @("");
+    "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "ConfigurationPolicies";
     "securityEnabled" = $True
@@ -188,7 +188,7 @@ Write-Verbose "Composing body for IdentityProtection"
 $IdentityProtectionGroupProperties = @{
     "description" = "Users that should use IdentityProtection";
     "displayName" = "IdentityProtection";
-    "groupTypes" = @("");
+    "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "IdentityProtection";
     "securityEnabled" = $True
@@ -213,7 +213,7 @@ Write-Verbose "Composing body for MCAS"
 $MCASGroupProperties = @{
     "description" = "Users that should use MCAS";
     "displayName" = "MCAS";
-    "groupTypes" = @("");
+    "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "MCAS";
     "securityEnabled" = $True
