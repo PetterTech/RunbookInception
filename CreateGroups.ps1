@@ -68,6 +68,7 @@ catch {
 Write-Verbose "Setting headerParams"
 $headerParams = @{
     'Authorization' = "Bearer $($TokenResponse.access_token)"
+    'Content-Type' = "application/json"
 }
 
 Write-Verbose "Finished with part 1"
