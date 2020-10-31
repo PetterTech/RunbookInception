@@ -32,7 +32,8 @@ try {
 
 catch {
     Write-Verbose "Something went wrong"
-    throw $error[0]
+    Write-Output $error[0]
+    throw "I have failed you"
 }
 
 #Creating test user
@@ -46,7 +47,8 @@ try {
 
 catch {
     Write-Verbose "Something went wrong"
-    throw $error[0]
+    Write-Output $error[0]
+    throw "I have failed you"
 }
 
 #Creating group
@@ -58,7 +60,8 @@ try {
 
 catch {
     Write-Verbose "Something went wrong"
-    throw $error[0]
+    Write-Output $error[0]
+    throw "I have failed you"
 }
 
 #Add user to group
@@ -70,5 +73,6 @@ try {
 
 catch {
     Write-Verbose "Something went wrong"
-    throw $error[0]
+    Write-Output $error[0]
+    throw "I have failed you"
 }
