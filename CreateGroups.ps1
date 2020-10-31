@@ -97,7 +97,7 @@ Write-Verbose "Body composed"
 
 try {
     Write-Verbose "Creating Dynamic group"
-    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $dynamicGroupProperties) -method POST -UseBasicParsing
+    $IntuneGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $dynamicGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
     Write-Output "Created dynamic Intune users group"
 }
@@ -122,7 +122,7 @@ Write-Verbose "Body composed"
 
 try {
     Write-Verbose "Creating security group"
-    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $profile1GroupProperties) -method POST -UseBasicParsing
+    $Profile1Group = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $profile1GroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
     Write-Output "Created Profile1 security group"
 }
@@ -141,13 +141,14 @@ $ConditionalAccessGroupProperties = @{
     "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "ConditionalAccess";
-    "securityEnabled" = $True
+    "securityEnabled" = $True;
+    "members@odata.bind" = @("https://graph.microsoft.com/v1.0/groups/$(($Profile1Group | ConvertFrom-Json).id)")
 }
 Write-Verbose "Body composed"
 
 try {
     Write-Verbose "Creating security group"
-    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $ConditionalAccessGroupProperties) -method POST -UseBasicParsing
+    $ConditionalAccessGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $ConditionalAccessGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
     Write-Output "Created ConditionalAccess security group"
 }
@@ -166,13 +167,14 @@ $ConfigurationPoliciesGroupProperties = @{
     "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "ConfigurationPolicies";
-    "securityEnabled" = $True
+    "securityEnabled" = $True;
+    "members@odata.bind" = @("https://graph.microsoft.com/v1.0/groups/$(($Profile1Group | ConvertFrom-Json).id)")
 }
 Write-Verbose "Body composed"
 
 try {
     Write-Verbose "Creating security group"
-    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $ConfigurationPoliciesGroupProperties) -method POST -UseBasicParsing
+    $ConfigurationPoliciesGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $ConfigurationPoliciesGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
     Write-Output "Created ConfigurationPolicies security group"
 }
@@ -191,13 +193,14 @@ $IdentityProtectionGroupProperties = @{
     "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "IdentityProtection";
-    "securityEnabled" = $True
+    "securityEnabled" = $True;
+    "members@odata.bind" = @("https://graph.microsoft.com/v1.0/groups/$(($Profile1Group | ConvertFrom-Json).id)")
 }
 Write-Verbose "Body composed"
 
 try {
     Write-Verbose "Creating security group"
-    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $IdentityProtectionGroupProperties) -method POST -UseBasicParsing
+    $IdentityProtectionGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $IdentityProtectionGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
     Write-Output "Created IdentityProtection security group"
 }
@@ -216,13 +219,14 @@ $MCASGroupProperties = @{
     "groupTypes" = @();
     "mailEnabled" = $False;
     "mailNickname" = "MCAS";
-    "securityEnabled" = $True
+    "securityEnabled" = $True;
+    "members@odata.bind" = @("https://graph.microsoft.com/v1.0/groups/$(($Profile1Group | ConvertFrom-Json).id)")
 }
 Write-Verbose "Body composed"
 
 try {
     Write-Verbose "Creating security group"
-    Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $MCASGroupProperties) -method POST -UseBasicParsing
+    $MCASGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $MCASGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
     Write-Output "Created MCAS security group"
 }
