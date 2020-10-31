@@ -1,6 +1,6 @@
 Param  
 (  
-    [Parameter (Mandatory = $true)]  
+    [Parameter (Mandatory = $false)]  
     [object] $WebhookData  
 )  
  
