@@ -7,6 +7,8 @@ Param
 Write-Verbose "Runbook started"
 #Setting variables
 $CreateGroupsWebhook = "https://84e8cab9-64dd-4663-92e9-987b0c6bf09a.webhook.we.azure-automation.net/webhooks?token=6ByaA0NfsnVSBhSbS0cfjELPhk%2bxpDfswC4UMIaj3q8%3d"
+$ResourceGroupName = "rgr-automation"
+$AutomationAccountName = "Automation"
 
 #region Part 1
 
@@ -60,8 +62,7 @@ $CreateGroupsBody = @{
 
 try {
     Write-Verbose "Invoking webrequest to create groups"
-    Start-AzAutomationRunbook –AutomationAccountName 'automation' –Name 'CreateGroups' -ResourceGroupName 'rgr-automation' –Parameters $CreateGroupsBody –Wait
-    #$CreateGroupsJob = Invoke-WebRequest -Uri $CreateGroupsWebhook -Body (ConvertTo-Json $CreateGroupsBody) -UseBasicParsing
+    $CreateGroupsJob = Invoke-WebRequest -Uri $CreateGroupsWebhook -Method Post -Body (ConvertTo-Json $CreateGroupsBody) -UseBasicParsing
     Write-Verbose "Webrequest invoked"
 }
 
@@ -71,7 +72,34 @@ catch {
     throw "Failed to invoke webrequest"
 }
 
+Write-Verbose "Checking status of CreateGroups job"
+while ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "New") {
+    Write-Verbose "Status is New, sleeping"
+    Start-Sleep -Seconds 10
+    }
+
+while ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Running") {
+    Write-Verbose "Status is Running, sleeping some more"
+    Start-Sleep -Seconds 10
+}
+
+if ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Failed") {
+    Write-Verbose "Status of CreateGroups job is failed"
+    Write-Output "Status of CreateGroups job is failed"
+    throw "Status of CreateGroups job is failed"
+}
+
+elseif ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Suspended") {
+    Write-Verbose "Status of CreateGroups job is Suspended"
+    Write-Output "Status of CreateGroups job is Suspended"
+    throw "Status of CreateGroups job is Suspended"
+}
+
+elseif ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Stopped") {
+    Write-Verbose "Status of CreateGroups job is Stopped"
+    Write-Output "Status of CreateGroups job is Stopped"
+    throw "Status of CreateGroups job is Stopped"    
+}
+
 Write-Verbose "Groups created"
-
-
 #endregion
