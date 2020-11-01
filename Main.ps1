@@ -41,6 +41,7 @@ else {
 } #End if webhookdata
 
 Write-Verbose "Done with part 1"
+Write-Output "Done with part 1"
 #endregion
 
 #region Part 2
@@ -71,6 +72,8 @@ catch {
     Write-Output $Error[0]
     throw "Failed to invoke webrequest"
 }
+
+Write-Output "Kicked off CreateGroups runbook"
 
 Write-Verbose "Checking status of CreateGroups job"
 while ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "New") {
