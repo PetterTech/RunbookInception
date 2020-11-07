@@ -51,48 +51,63 @@ Write-Output "Done with part 1"
 #
 #########################################################################################
 
-#Running CreateGroups runbook
 Write-Verbose "Starting part 2"
 
-$ServicePrincipalConnection = Get-AutomationConnection -Name 'AzureRunAsConnection'
+#Getting runas connection
+try {
+    Write-Verbose "Getting runas connection"
+    $ServicePrincipalConnection = Get-AutomationConnection -Name 'AzureRunAsConnection'
+}
 
-Connect-AzAccount `
+catch {
+    Write-Verbose "Failed to get runas connection"
+    Write-Output $Error[0]
+    throw "Failed to get runas connection"
+}
+
+#Connecting to Azure
+try {
+    Write-Verbose "Connecting to Azure"
+    Connect-AzAccount `
     -ServicePrincipal `
     -Tenant $ServicePrincipalConnection.TenantId `
     -ApplicationId $ServicePrincipalConnection.ApplicationId `
     -CertificateThumbprint $ServicePrincipalConnection.CertificateThumbprint | Out-Null
+}
 
-Write-Verbose "Composing CreateGroups body"
+catch {
+    Write-Verbose "Failed to connect"
+    Write-Output $Error[0]
+    throw "Failed to connecy"
+}
+
+#Composing parameter object
+Write-Verbose "Composing CreateGroups parameters"
 $CreateGroupsBody = @{
     "Tenantname" = $WebhookInput.Tenantname;
     "ApplicationID" = $WebhookInput.ApplicationID;
     "ApplicationSecret" = $WebhookInput.ApplicationSecret
 }
 
+#Starting runbook
 try {
-    Write-Verbose "Invoking webrequest to create groups"
-    #$CreateGroupsJob = Invoke-WebRequest -Uri $CreateGroupsWebhook -Method Post -Body (ConvertTo-Json $CreateGroupsBody) -UseBasicParsing
-    $CreateGroupsJob = Start-AzAutomationRunbook -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name CreateGroups2 -Parameters $CreateGroupsBody
-    Write-Verbose "Webrequest invoked"
+    Write-Verbose "Starting runbook to create groups"
+    $CreateGroupsJob = Start-AzAutomationRunbook -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name CreateGroups -Parameters $CreateGroupsBody
+    Write-Verbose "Runbook started"
 }
 
 catch {
-    Write-Verbose "Failed to invoke webrequest"
+    Write-Verbose "Failed to start runbook"
     Write-Output $Error[0]
-    throw "Failed to invoke webrequest"
+    throw "Failed to start runbook"
 }
 
-Write-Output "Kicked off CreateGroups runbook"
-
+#Getting job id
 Write-Verbose "Getting Job ID for CreateGrops job"
 $CreateGroupsJobId = $CreateGroupsJob.JobId.guid
-Write-Output "Job Id for group creation is $($CreateGroupsJobId)"
+Write-Verbose "Job Id for group creation is $($CreateGroupsJobId)"
 
-$job = Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
-write-output $job
-
-Write-Output "Status right now is $((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).Status)"
-
+#Waiting for runbook to complete successfully
 Write-Verbose "Checking status of CreateGroups job"
 while ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "New") {
     Write-Verbose "Status is New, sleeping"
@@ -122,6 +137,5 @@ elseif ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $Resource
     throw "Status of CreateGroups job is Stopped"    
 }
 
-Write-Output "Seems like groups were created"
 Write-Verbose "Groups created"
 #endregion
