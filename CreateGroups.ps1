@@ -99,7 +99,7 @@ try {
     Write-Verbose "Creating Dynamic group"
     $IntuneGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $dynamicGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
-    Write-Output "Created dynamic Intune users group"
+    #Write-Output "Created dynamic Intune users group"
 }
 
 catch {
@@ -124,7 +124,7 @@ try {
     Write-Verbose "Creating security group"
     $Profile1Group = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $profile1GroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
-    Write-Output "Created Profile1 security group"
+    #Write-Output "Created Profile1 security group"
 }
 
 catch {
@@ -150,7 +150,7 @@ try {
     Write-Verbose "Creating security group"
     $ConditionalAccessGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $ConditionalAccessGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
-    Write-Output "Created ConditionalAccess security group"
+    #Write-Output "Created ConditionalAccess security group"
 }
 
 catch {
@@ -176,7 +176,7 @@ try {
     Write-Verbose "Creating security group"
     $ConfigurationPoliciesGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $ConfigurationPoliciesGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
-    Write-Output "Created ConfigurationPolicies security group"
+    #Write-Output "Created ConfigurationPolicies security group"
 }
 
 catch {
@@ -202,7 +202,7 @@ try {
     Write-Verbose "Creating security group"
     $IdentityProtectionGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $IdentityProtectionGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
-    Write-Output "Created IdentityProtection security group"
+    #Write-Output "Created IdentityProtection security group"
 }
 
 catch {
@@ -228,7 +228,7 @@ try {
     Write-Verbose "Creating security group"
     $MCASGroup = Invoke-WebRequest -Headers $headerParams -uri "https://graph.microsoft.com/v1.0/groups" -Body (ConvertTo-Json $MCASGroupProperties) -method POST -UseBasicParsing
     Write-Verbose "Group created"
-    Write-Output "Created MCAS security group"
+    #Write-Output "Created MCAS security group"
 }
 
 catch {
