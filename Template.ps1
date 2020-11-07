@@ -1,7 +1,7 @@
-Param  
-(  
-    [Parameter (Mandatory = $false)]  
-    [object] $WebhookData  
+Param (  
+    [Parameter(Mandatory = $True)][string]$Tenantname,
+    [Parameter(Mandatory = $True)][string]$ApplicationID,
+    [Parameter(Mandatory = $True)][string]$ApplicationSecret
 )  
  
 Write-Verbose "Runbook started"
@@ -13,36 +13,14 @@ Write-Verbose "Runbook started"
 #
 #########################################################################################
 
-#Checking if runbook was started from webhook  
-Write-Verbose "Checking if webhookdata is present"
-if ($WebhookData) {
-    try {
-        Write-Verbose "Grabbing webhookdata"
-        # Collect properties of WebhookData  
-        $WebhookInput = (ConvertFrom-Json -InputObject $WebHookData.RequestBody)
-        Write-Verbose "Got webhookdata"        
-    }
-
-    catch {
-        Write-Verbose "Failed to grab WebhookInput"
-        throw "Failed to grab WebhookInput"
-    }
-
-}
-
-else {  
-    Write-Verbose "Webhookdata is NOT present"
-    Write-Error -Message 'Runbook was not started from Webhook' -ErrorAction stop  
-} #End if webhookdata
-
 #Getting token from Graph
 Write-Verbose "Composing body for token request"
 try {
     $ReqTokenBody = @{
         Grant_Type    = "client_credentials"
         Scope         = "https://graph.microsoft.com/.default"
-        client_Id     = $WebhookInput.ApplicationID
-        Client_Secret = $WebhookInput.ApplicationSecret
+        client_Id     = $ApplicationID
+        Client_Secret = $ApplicationSecret
     }
     Write-Verbose "Body composed"
 }
@@ -55,7 +33,7 @@ catch {
 
 Write-Verbose "Invoking rest method to get token from graph"
 try {
-    $TokenResponse = Invoke-RestMethod -Uri "https://login.microsoftonline.com/$($WebhookInput.Tenantname)/oauth2/v2.0/token" -Method POST -Body $ReqTokenBody
+    $TokenResponse = Invoke-RestMethod -Uri "https://login.microsoftonline.com/$($Tenantname)/oauth2/v2.0/token" -Method POST -Body $ReqTokenBody
     Write-Verbose "Got token"
 }
 
