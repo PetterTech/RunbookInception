@@ -60,7 +60,7 @@ Connect-AzAccount `
     -ServicePrincipal `
     -Tenant $ServicePrincipalConnection.TenantId `
     -ApplicationId $ServicePrincipalConnection.ApplicationId `
-    -CertificateThumbprint $ServicePrincipalConnection.CertificateThumbprint
+    -CertificateThumbprint $ServicePrincipalConnection.CertificateThumbprint | Out-Null
 
 Write-Verbose "Composing CreateGroups body"
 $CreateGroupsBody = @{
@@ -85,7 +85,7 @@ catch {
 Write-Output "Kicked off CreateGroups runbook"
 
 Write-Verbose "Getting Job ID for CreateGrops job"
-$CreateGroupsJobId = ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))).guid
+$CreateGroupsJobId = $CreateGroupsJob.JobId.guid
 Write-Output "Job Id for group creation is $($CreateGroupsJobId)"
 
 $job = Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
