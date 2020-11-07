@@ -74,11 +74,12 @@ catch {
 }
 
 Write-Output "Kicked off CreateGroups runbook"
+
 Write-Verbose "Getting Job ID for CreateGrops job"
 $CreateGroupsJobId = ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))).guid
 Write-Output "Job Id for group creation is $($CreateGroupsJobId)"
 
-
+Write-Output "Status right now is $((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).Status)"
 
 Write-Verbose "Checking status of CreateGroups job"
 while ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "New") {
