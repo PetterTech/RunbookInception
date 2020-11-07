@@ -74,31 +74,36 @@ catch {
 }
 
 Write-Output "Kicked off CreateGroups runbook"
+Write-Verbose "Getting Job ID for CreateGrops job"
+$CreateGroupsJobId = ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))).guid
+Write-Output "Job Id for group creation is $($CreateGroupsJobId)"
+
+
 
 Write-Verbose "Checking status of CreateGroups job"
-while ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "New") {
+while ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "New") {
     Write-Verbose "Status is New, sleeping"
     Start-Sleep -Seconds 10
     }
 
-while ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Running") {
+while ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Running") {
     Write-Verbose "Status is Running, sleeping some more"
     Start-Sleep -Seconds 10
 }
 
-if ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Failed") {
+if ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Failed") {
     Write-Verbose "Status of CreateGroups job is failed"
     Write-Output "Status of CreateGroups job is failed"
     throw "Status of CreateGroups job is failed"
 }
 
-elseif ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Suspended") {
+elseif ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Suspended") {
     Write-Verbose "Status of CreateGroups job is Suspended"
     Write-Output "Status of CreateGroups job is Suspended"
     throw "Status of CreateGroups job is Suspended"
 }
 
-elseif ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json).JobIds))) -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Stopped") {
+elseif ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Stopped") {
     Write-Verbose "Status of CreateGroups job is Stopped"
     Write-Output "Status of CreateGroups job is Stopped"
     throw "Status of CreateGroups job is Stopped"    
