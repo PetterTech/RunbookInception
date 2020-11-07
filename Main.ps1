@@ -54,6 +54,14 @@ Write-Output "Done with part 1"
 #Running CreateGroups runbook
 Write-Verbose "Starting part 2"
 
+$ServicePrincipalConnection = Get-AutomationConnection -Name 'AzureRunAsConnection'
+
+Connect-AzAccount `
+    -ServicePrincipal `
+    -Tenant $ServicePrincipalConnection.TenantId `
+    -ApplicationId $ServicePrincipalConnection.ApplicationId `
+    -CertificateThumbprint $ServicePrincipalConnection.CertificateThumbprint
+
 Write-Verbose "Composing CreateGroups body"
 $CreateGroupsBody = @{
     "Tenantname" = $WebhookInput.Tenantname;
@@ -63,7 +71,8 @@ $CreateGroupsBody = @{
 
 try {
     Write-Verbose "Invoking webrequest to create groups"
-    $CreateGroupsJob = Invoke-WebRequest -Uri $CreateGroupsWebhook -Method Post -Body (ConvertTo-Json $CreateGroupsBody) -UseBasicParsing
+    #$CreateGroupsJob = Invoke-WebRequest -Uri $CreateGroupsWebhook -Method Post -Body (ConvertTo-Json $CreateGroupsBody) -UseBasicParsing
+    $CreateGroupsJob = Start-AzAutomationRunbook -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name CreateGroups2 -Parameters $CreateGroupsBody
     Write-Verbose "Webrequest invoked"
 }
 
