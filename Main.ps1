@@ -104,5 +104,6 @@ elseif ((Get-AzAutomationJob -id ([guid]::new((($CreateGroupsJob.Content | Conve
     throw "Status of CreateGroups job is Stopped"    
 }
 
+Write-Output "Seems like groups were created"
 Write-Verbose "Groups created"
 #endregion
