@@ -80,7 +80,7 @@ $CreateGroupsJobId = ([guid]::new((($CreateGroupsJob.Content | ConvertFrom-Json)
 Write-Output "Job Id for group creation is $($CreateGroupsJobId)"
 
 $job = Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName
-$job
+write-output $job
 
 Write-Output "Status right now is $((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).Status)"
 
