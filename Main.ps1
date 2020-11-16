@@ -39,6 +39,43 @@ else {
     Write-Error -Message 'Runbook was not started from Webhook' -ErrorAction stop  
 } #End if webhookdata
 
+#Getting token from Graph
+Write-Verbose "Composing body for token request"
+try {
+    $ReqTokenBody = @{
+        Grant_Type    = "client_credentials"
+        Scope         = "https://graph.microsoft.com/.default"
+        client_Id     = $WebhookInput.ApplicationID
+        Client_Secret = $WebhookInput.ApplicationSecret
+    }
+    Write-Verbose "Body composed"
+}
+
+catch {
+    Write-Verbose "Failed to compose body"
+    Write-Output $Error[0]
+    throw "Failed to compose body"
+}
+
+Write-Verbose "Invoking rest method to get token from graph"
+try {
+    $TokenResponse = Invoke-RestMethod -Uri "https://login.microsoftonline.com/$($Tenantname)/oauth2/v2.0/token" -Method POST -Body $ReqTokenBody
+    Write-Verbose "Got token"
+}
+
+catch {
+    Write-Verbose "Failed to get token"
+    Write-Output $Error[0]
+    throw "Failed to get token"
+}
+
+Write-Verbose "Setting headerParams"
+$headerParams = @{
+    'Authorization' = "Bearer $($TokenResponse.access_token)"
+    'Content-Type' = "application/json"
+}
+
+
 Write-Verbose "Done with part 1"
 Write-Output "Done with part 1 - Getting data"
 #endregion
@@ -148,12 +185,27 @@ Write-Output "Groups created"
 #region Config policies Creation
 Write-Output "Starting config policies creation runbook"
 
+#Finding AD Group for config policies
+try {
+    Write-Verbose "Getting group ID for ConfigurationPolicies"
+    $uri = 'https://graph.microsoft.com/v1.0/groups?$filter=displayName%20eq%20'
+    $uri = $uri + "'ConfigurationPolicies'"
+    $ADGroupForConfigPolicies = Invoke-RestMethod -Method Get -Uri $uri -Headers $headerParams -ErrorAction Stop
+}
+
+catch {
+    Write-Verbose "Failed to get group ID for ConfigurationPolicies"
+    Write-Output $Error[0]
+    throw "Failed to get group ID for ConfigurationPolicies"
+}
+
 #Composing parameter object
 Write-Verbose "Composing CreateConfigPolicies parameters"
 $CreateConfigPoliciesBody = @{
     "Tenantname" = $WebhookInput.Tenantname;
     "ApplicationID" = $WebhookInput.ApplicationID;
-    "ApplicationSecret" = $WebhookInput.ApplicationSecret
+    "ApplicationSecret" = $WebhookInput.ApplicationSecret;
+    "GroupID" = $ADGroupForConfigPolicies.value.id
 }
 
 #Starting runbook
