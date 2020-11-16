@@ -58,8 +58,9 @@ catch {
 }
 
 Write-Verbose "Invoking rest method to get token from graph"
+
 try {
-    $TokenResponse = Invoke-RestMethod -Uri "https://login.microsoftonline.com/$($Tenantname)/oauth2/v2.0/token" -Method POST -Body $ReqTokenBody
+    $TokenResponse = Invoke-RestMethod -Uri "https://login.microsoftonline.com/$($WebhookInput.Tenantname)/oauth2/v2.0/token" -Method POST -Body $ReqTokenBody
     Write-Verbose "Got token"
 }
 
