@@ -370,7 +370,7 @@ $JSONforMacOSEndpoint = @'
 {
     "@odata.type": "#microsoft.graph.macOSEndpointProtectionConfiguration",
     "description": null,
-    "displayName": "macOS - Endpoint Protection - runbooktest",
+    "displayName": "macOS - Endpoint Protection",
     "fileVaultEnabled": true,
     "fileVaultSelectedRecoveryKeyTypes": "personalRecoveryKey",
     "fileVaultPersonalRecoveryKeyHelpMessage": "To retrieve a lost or recently rotated recovery key, sign in to the Intune Company Portal website from any device. In the portal, go to Devices and select the device that has FileVault enabled, and then select Get recovery key. ",
