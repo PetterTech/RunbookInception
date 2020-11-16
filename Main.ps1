@@ -6,7 +6,6 @@ Param
  
 Write-Verbose "Runbook started"
 #Setting variables
-$CreateGroupsWebhook = "https://84e8cab9-64dd-4663-92e9-987b0c6bf09a.webhook.we.azure-automation.net/webhooks?token=6ByaA0NfsnVSBhSbS0cfjELPhk%2bxpDfswC4UMIaj3q8%3d"
 $ResourceGroupName = "rgr-automation"
 $AutomationAccountName = "Automation"
 
