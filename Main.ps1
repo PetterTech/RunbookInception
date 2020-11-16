@@ -50,8 +50,8 @@ Write-Output "Done with part 1"
 #
 #########################################################################################
 
+#region prep
 Write-Verbose "Starting part 2"
-
 #Getting runas connection
 try {
     Write-Verbose "Getting runas connection"
@@ -79,7 +79,9 @@ catch {
     Write-Output $Error[0]
     throw "Failed to connecy"
 }
+#endregion
 
+#region Group Creation
 #Composing parameter object
 Write-Verbose "Composing CreateGroups parameters"
 $CreateGroupsBody = @{
@@ -137,4 +139,68 @@ elseif ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $Resource
 }
 
 Write-Verbose "Groups created"
+Write-Output "Groups created"
+#endregion
+
+#region Config policies Creation
+#Composing parameter object
+Write-Verbose "Composing CreateConfigPolicies parameters"
+$CreateConfigPoliciesBody = @{
+    "Tenantname" = $WebhookInput.Tenantname;
+    "ApplicationID" = $WebhookInput.ApplicationID;
+    "ApplicationSecret" = $WebhookInput.ApplicationSecret
+}
+
+#Starting runbook
+try {
+    Write-Verbose "Starting runbook to create ConfigPolicies"
+    $CreateConfigPoliciesJob = Start-AzAutomationRunbook -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name CreateConfigPolicies -Parameters $CreateConfigPoliciesBody
+    Write-Verbose "Runbook started"
+}
+
+catch {
+    Write-Verbose "Failed to start runbook"
+    Write-Output $Error[0]
+    throw "Failed to start runbook"
+}
+
+#Getting job id
+Write-Verbose "Getting Job ID for CreateConfigPolicies job"
+$CreateConfigPoliciesJobId = $CreateConfigPoliciesJob.JobId.guid
+Write-Verbose "Job Id for group creation is $($CreateConfigPoliciesJobId)"
+
+#Waiting for runbook to complete successfully
+Write-Verbose "Checking status of CreateConfigPolicies job"
+while ((Get-AzAutomationJob -id $CreateConfigPoliciesJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "New") {
+    Write-Verbose "Status is New, sleeping"
+    Start-Sleep -Seconds 10
+    }
+
+while ((Get-AzAutomationJob -id $CreateConfigPoliciesJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Running") {
+    Write-Verbose "Status is Running, sleeping some more"
+    Start-Sleep -Seconds 10
+}
+
+if ((Get-AzAutomationJob -id $CreateConfigPoliciesJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Failed") {
+    Write-Verbose "Status of CreateConfigPolicies job is failed"
+    Write-Output "Status of CreateConfigPolicies job is failed"
+    throw "Status of CreateConfigPolicies job is failed"
+}
+
+elseif ((Get-AzAutomationJob -id $CreateConfigPoliciesJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Suspended") {
+    Write-Verbose "Status of CreateConfigPolicies job is Suspended"
+    Write-Output "Status of CreateConfigPolicies job is Suspended"
+    throw "Status of CreateConfigPolicies job is Suspended"
+}
+
+elseif ((Get-AzAutomationJob -id $CreateConfigPoliciesJobId -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName).status -eq "Stopped") {
+    Write-Verbose "Status of CreateConfigPolicies job is Stopped"
+    Write-Output "Status of CreateConfigPolicies job is Stopped"
+    throw "Status of CreateConfigPolicies job is Stopped"    
+}
+
+Write-Verbose "ConfigPolicies created"
+Write-Output "ConfigPolicies created"
+#endregion
+
 #endregion
