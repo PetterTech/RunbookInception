@@ -40,7 +40,7 @@ else {
 } #End if webhookdata
 
 Write-Verbose "Done with part 1"
-Write-Output "Done with part 1"
+Write-Output "Done with part 1 - Getting data"
 #endregion
 
 #region Part 2
@@ -52,6 +52,7 @@ Write-Output "Done with part 1"
 
 #region prep
 Write-Verbose "Starting part 2"
+Write-Output "Starting part 2 - Running runbooks"
 #Getting runas connection
 try {
     Write-Verbose "Getting runas connection"
@@ -82,6 +83,8 @@ catch {
 #endregion
 
 #region Group Creation
+Write-Output "Starting group creation runbook"
+
 #Composing parameter object
 Write-Verbose "Composing CreateGroups parameters"
 $CreateGroupsBody = @{
@@ -93,7 +96,7 @@ $CreateGroupsBody = @{
 #Starting runbook
 try {
     Write-Verbose "Starting runbook to create groups"
-    $CreateGroupsJob = Start-AzAutomationRunbook -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name CreateGroups -Parameters $CreateGroupsBody
+    $CreateGroupsJob = Start-AzAutomationRunbook -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name CreateGroups -Parameters $CreateGroupsBody -ErrorAction Stop
     Write-Verbose "Runbook started"
 }
 
@@ -143,6 +146,8 @@ Write-Output "Groups created"
 #endregion
 
 #region Config policies Creation
+Write-Output "Starting config policies creation runbook"
+
 #Composing parameter object
 Write-Verbose "Composing CreateConfigPolicies parameters"
 $CreateConfigPoliciesBody = @{
@@ -154,7 +159,7 @@ $CreateConfigPoliciesBody = @{
 #Starting runbook
 try {
     Write-Verbose "Starting runbook to create ConfigPolicies"
-    $CreateConfigPoliciesJob = Start-AzAutomationRunbook -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name CreateConfigPolicies -Parameters $CreateConfigPoliciesBody
+    $CreateConfigPoliciesJob = Start-AzAutomationRunbook -ResourceGroupName $ResourceGroupName -AutomationAccountName $AutomationAccountName -Name CreateConfigPolicies -Parameters $CreateConfigPoliciesBody -ErrorAction Stop
     Write-Verbose "Runbook started"
 }
 
