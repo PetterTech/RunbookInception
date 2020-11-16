@@ -99,7 +99,7 @@ $JSONformacOS = @'
 {
     "@odata.type": "#microsoft.graph.macOSGeneralDeviceConfiguration",
     "description": null,
-    "displayName": "macOS - Device Restrictions - runbooktest",
+    "displayName": "macOS - Device Restrictions",
     "version": 1,
     "compliantAppListType": "none",
     "emailInDomainSuffixes": [],
@@ -157,7 +157,7 @@ $JSONforiOS = @'
 {
     "@odata.type": "#microsoft.graph.iosGeneralDeviceConfiguration",
     "description": null,
-    "displayName": "iOS - Device Restrictions - runbooktest",
+    "displayName": "iOS - Device Restrictions",
     "passcodeBlockFingerprintUnlock": true,
     "passcodeBlockSimple": true,
     "passcodeMinimumLength": 4,
@@ -209,7 +209,7 @@ $JSONforAndroid = @'
 {
     "@odata.type": "#microsoft.graph.androidGeneralDeviceConfiguration",
     "description": null,
-    "displayName": "Android - Device Restrictions - runbooktest",
+    "displayName": "Android - Device Restrictions",
     "storageRequireDeviceEncryption": true,
     "passwordMinimumLength": 4,
     "passwordMinutesOfInactivityBeforeScreenTimeout": 15,
@@ -261,7 +261,7 @@ $JSONforAndroidEnt = @'
     "@odata.type": "#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration",
     "id": "997bf777-5e93-444e-a559-5606d663d7e8",
     "description": null,
-    "displayName": "Android Enterprise - Device Restrictions (Work Profile) - runbooktest",
+    "displayName": "Android Enterprise - Device Restrictions",
     "passwordMinimumLength": 4,
     "passwordMinutesOfInactivityBeforeScreenTimeout": 15,
     "passwordRequiredType": "numericComplex",
@@ -317,7 +317,7 @@ $JSONforWin10 = @'
 {
     "@odata.type": "#microsoft.graph.windows10GeneralConfiguration",
     "description": null,
-    "displayName": "Win10 - Device Restrictions - runbooktest",
+    "displayName": "Win10 - Device Restrictions",
     "authenticationAllowSecondaryDevice": true,
     "passwordBlockSimple": true,
     "passwordMinimumLength": 7,
@@ -365,7 +365,7 @@ if (!($SkipMacOSEndpointConfig)) {
 #region macOS - Endpoint
 
 #Composing JSON object for macOS - Endpoint config policy
-Write-Verbose "Composing JSON object for macOS - Endpoint"
+Write-Verbose "Composing JSON object for macOS"
 $JSONforMacOSEndpoint = @'
 {
     "@odata.type": "#microsoft.graph.macOSEndpointProtectionConfiguration",
@@ -420,7 +420,7 @@ $JSONforWin10Endpoint = @'
     "@odata.type": "#microsoft.graph.windows10EndpointProtectionConfiguration",
     "id": "ea5b8264-fb09-4f68-9b64-e9f651fb80b8",
     "description": null,
-    "displayName": "Win10 - Endpoint Protection - runbooktest",
+    "displayName": "Win10 - Endpoint Protection",
     "bitLockerEnableStorageCardEncryptionOnMobile": true,
     "bitLockerEncryptDevice": true,
     "bitLockerSystemDrivePolicy": {
