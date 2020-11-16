@@ -8,6 +8,8 @@ Write-Verbose "Runbook started"
 #Setting variables
 $ResourceGroupName = "rgr-automation"
 $AutomationAccountName = "Automation"
+$SkipGroupCreation = $false
+$SkipConfigPolicies = $false
 
 #region Part 1
 
@@ -120,6 +122,7 @@ catch {
 }
 #endregion
 
+if (!($SkipGroupCreation)) {
 #region Group Creation
 Write-Output "Starting group creation runbook"
 
@@ -182,7 +185,9 @@ elseif ((Get-AzAutomationJob -id $CreateGroupsJobId -ResourceGroupName $Resource
 Write-Verbose "Groups created"
 Write-Output "Groups created"
 #endregion
+}
 
+if (!($SkipConfigPolicies)) {
 #region Config policies Creation
 Write-Output "Starting config policies creation runbook"
 
@@ -260,5 +265,6 @@ elseif ((Get-AzAutomationJob -id $CreateConfigPoliciesJobId -ResourceGroupName $
 Write-Verbose "ConfigPolicies created"
 Write-Output "ConfigPolicies created"
 #endregion
+}
 
 #endregion
